@@ -13,6 +13,10 @@
 @end
 
 @implementation DetailViewController
+{
+    MKMapView *mapView;
+}
+
 
 #pragma mark - Managing the detail item
 
@@ -41,10 +45,32 @@
 	// Do any additional setup after loading the view, typically from a nib.
     [self configureView];
     
-    MKMapView *mv = [[MKMapView alloc] initWithFrame:self.view.frame];
-    [self.view addSubview:mv];
+    mapView = [[MKMapView alloc] initWithFrame:self.view.frame];
+    mapView.showsUserLocation = YES;
+    [self.view addSubview:mapView];
+
+    CLLocationManager *locationManager = [[CLLocationManager alloc] init];
+	[locationManager startUpdatingLocation];
+
 }
 
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    
+	CLLocationCoordinate2D coordinate = newLocation.coordinate;
+	
+	[mapView setCenterCoordinate:coordinate animated:NO];
+
+	MKCoordinateRegion zoom = mapView.region;
+	zoom.span.latitudeDelta = 0.005;
+	zoom.span.longitudeDelta = 0.005;
+	[mapView setRegion:zoom animated:YES];
+    
+}
+
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
+    NSLog(@"ERROR");
+}
 
 
 

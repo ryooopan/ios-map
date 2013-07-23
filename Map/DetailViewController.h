@@ -8,14 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import <CoreLocation/CoreLocation.h>
 
 @interface DetailViewController : UIViewController
 
 @property (strong, nonatomic) id detailItem;
 
 @property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
-
-@property (strong,nonatomic)IBOutlet MKMapView* mapView;
 
 
 @end
