@@ -40,7 +40,13 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     [self configureView];
+    
+    MKMapView *mv = [[MKMapView alloc] initWithFrame:self.view.frame];
+    [self.view addSubview:mv];
 }
+
+
+
 
 - (void)didReceiveMemoryWarning
 {

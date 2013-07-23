@@ -24,6 +24,7 @@
 		0DA6749A179E6EB900876BDE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA67472179E6EB900876BDE /* Foundation.framework */; };
 		0DA674A2179E6EB900876BDE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0DA674A0179E6EB900876BDE /* InfoPlist.strings */; };
 		0DA674A5179E6EB900876BDE /* MapTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA674A4179E6EB900876BDE /* MapTests.m */; };
+		0DA674C6179E72ED00876BDE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA674C5179E72ED00876BDE /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		0DA674A1179E6EB900876BDE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0DA674A3179E6EB900876BDE /* MapTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapTests.h; sourceTree = "<group>"; };
 		0DA674A4179E6EB900876BDE /* MapTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MapTests.m; sourceTree = "<group>"; };
+		0DA674C5179E72ED00876BDE /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0DA674C6179E72ED00876BDE /* MapKit.framework in Frameworks */,
 				0DA67471179E6EB900876BDE /* UIKit.framework in Frameworks */,
 				0DA67473179E6EB900876BDE /* Foundation.framework in Frameworks */,
 				0DA67475179E6EB900876BDE /* CoreGraphics.framework in Frameworks */,
@@ -90,6 +93,7 @@
 		0DA67464179E6EB900876BDE = {
 			isa = PBXGroup;
 			children = (
+				0DA674C5179E72ED00876BDE /* MapKit.framework */,
 				0DA67476179E6EB900876BDE /* Map */,
 				0DA6749D179E6EB900876BDE /* MapTests */,
 				0DA6746F179E6EB900876BDE /* Frameworks */,
