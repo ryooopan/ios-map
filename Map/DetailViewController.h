@@ -10,11 +10,8 @@
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
 
-@interface DetailViewController : UIViewController
+@interface DetailViewController : UIViewController <CLLocationManagerDelegate>
 
-@property (strong, nonatomic) id detailItem;
-
-@property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
-
+@property (nonatomic, retain) NSDictionary *venue;
 
 @end

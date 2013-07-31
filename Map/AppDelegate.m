@@ -7,11 +7,16 @@
 //
 
 #import "AppDelegate.h"
+#import "Foursquare2.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [Foursquare2 setupFoursquareWithKey:@"5P1OVCFK0CCVCQ5GBBCWRFGUVNX5R4WGKHL2DGJGZ32FDFKT"
+                                 secret:@"UPZJO0A0XL44IHCD1KQBMAYGCZ45Z03BORJZZJXELPWHPSAR"
+                            callbackURL:@"app://testapp123"];
+
     return YES;
 }
 							

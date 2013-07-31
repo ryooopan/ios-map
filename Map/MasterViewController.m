@@ -9,9 +9,14 @@
 #import "MasterViewController.h"
 
 #import "DetailViewController.h"
+#import "Foursquare2.h"
 
 @interface MasterViewController () {
     NSMutableArray *_objects;
+    NSMutableArray *venues;
+    
+    MKMapView *mapView;
+    CLLocationManager *locationManager;
 }
 @end
 
@@ -25,27 +30,70 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
-
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-    self.navigationItem.rightBarButtonItem = addButton;
+    mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 160)];
+    self.tableView.tableHeaderView = mapView;
+    mapView.showsUserLocation = YES;
+    
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    locationManager.delegate = self;
+	[locationManager startUpdatingLocation];
 }
+
+-(void)setupMapForLocatoion:(CLLocation*)newLocation{
+    MKCoordinateRegion region;
+    MKCoordinateSpan span;
+    span.latitudeDelta = 0.003;
+    span.longitudeDelta = 0.003;
+    CLLocationCoordinate2D location;
+    location.latitude = newLocation.coordinate.latitude;
+    location.longitude = newLocation.coordinate.longitude;
+    region.span = span;
+    region.center = location;
+    [mapView setRegion:region animated:YES];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation{
+
+    NSLog(@"longitude : %f, latitude %f", newLocation.coordinate.longitude, newLocation.coordinate.latitude);
+	[mapView setCenterCoordinate:newLocation.coordinate animated:YES];
+    
+	MKCoordinateRegion zoom = mapView.region;
+	zoom.span.latitudeDelta = 0.005;
+	zoom.span.longitudeDelta = 0.005;
+	[mapView setRegion:zoom animated:YES];
+    
+    [locationManager stopUpdatingLocation];
+    [self getVenuesForLocation:newLocation];
+    [self setupMapForLocatoion:newLocation];
+}
+
+-(void)getVenuesForLocation:(CLLocation*)location{
+    [Foursquare2 searchVenuesNearByLatitude:@(location.coordinate.latitude)
+								  longitude:@(location.coordinate.longitude)
+								 accuracyLL:nil
+								   altitude:nil
+								accuracyAlt:nil
+									  query:nil
+									  limit:nil
+									 intent:intentCheckin
+                                     radius:@(500)
+                                 categoryId:nil
+								   callback:^(BOOL success, id result){
+                                       NSLog(@"%@", result);
+									   if (success) {
+										   NSDictionary *dict = result;
+                                           venues = [dict valueForKeyPath:@"response.venues"];
+                                           [self.tableView reloadData];
+									   }
+								   }];
+}
+
+
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)insertNewObject:(id)sender
-{
-    if (!_objects) {
-        _objects = [[NSMutableArray alloc] init];
-    }
-    [_objects insertObject:[NSDate date] atIndex:0];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 #pragma mark - Table View
@@ -57,15 +105,14 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _objects.count;
+    return venues.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
 
-    NSDate *object = _objects[indexPath.row];
-    cell.textLabel.text = [object description];
+    cell.textLabel.text = [venues[indexPath.row] valueForKey:@"name"];
     return cell;
 }
 
@@ -103,11 +150,11 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([[segue identifier] isEqualToString:@"showDetail"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSDate *object = _objects[indexPath.row];
-        [[segue destinationViewController] setDetailItem:object];
-    }
+    NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+
+    DetailViewController *detailViewController = [segue destinationViewController];
+    detailViewController.venue = venues[indexPath.row];
+    
 }
 
 @end

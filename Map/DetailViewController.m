@@ -9,56 +9,39 @@
 #import "DetailViewController.h"
 
 @interface DetailViewController ()
-- (void)configureView;
 @end
 
 @implementation DetailViewController
 {
     MKMapView *mapView;
+    CLLocationManager *locationManager;
 }
 
 
 #pragma mark - Managing the detail item
 
-- (void)setDetailItem:(id)newDetailItem
-{
-    if (_detailItem != newDetailItem) {
-        _detailItem = newDetailItem;
-        
-        // Update the view.
-        [self configureView];
-    }
-}
-
-- (void)configureView
-{
-    // Update the user interface for the detail item.
-
-    if (self.detailItem) {
-        self.detailDescriptionLabel.text = [self.detailItem description];
-    }
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    [self configureView];
     
-    mapView = [[MKMapView alloc] initWithFrame:self.view.frame];
+    mapView = [[MKMapView alloc] initWithFrame:self.view.bounds];
     mapView.showsUserLocation = YES;
     [self.view addSubview:mapView];
 
-    CLLocationManager *locationManager = [[CLLocationManager alloc] init];
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
 	[locationManager startUpdatingLocation];
-
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    
+
 	CLLocationCoordinate2D coordinate = newLocation.coordinate;
-	
-	[mapView setCenterCoordinate:coordinate animated:NO];
+
+    NSLog(@"%f", coordinate.latitude);
+    NSLog(@"%f", coordinate.longitude);
+    
+	[mapView setCenterCoordinate:coordinate animated:YES];
 
 	MKCoordinateRegion zoom = mapView.region;
 	zoom.span.latitudeDelta = 0.005;
@@ -67,12 +50,9 @@
     
 }
 
-
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
     NSLog(@"ERROR");
 }
-
-
 
 - (void)didReceiveMemoryWarning
 {
